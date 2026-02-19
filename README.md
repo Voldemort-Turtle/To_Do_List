@@ -56,7 +56,7 @@ Check your Python version:
 - python --version
 
 Clone the repository
-- git clone https://github.com/TWOJ_LOGIN/TWOJE_REPO.git
+- git clone https://github.com/WojtczakMateusz/To_Do_List.git
   
  Navigate to the project folder
 - cd YOUR_REPOSITORY
