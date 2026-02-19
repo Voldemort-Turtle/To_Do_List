@@ -19,6 +19,6 @@ The program is designed to demonstrate:
 5. EXIT --- Closes the application
 
 Each task contains:
- Unique ID
- Task description
- Completion status
+ Unique ID.
+ Task description.
+ Completion status.
