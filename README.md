@@ -50,7 +50,7 @@ Each task contains:
 
 '''
 
-#How to run:
+# How to run:
 
 Check your Python version:
 - python --version
