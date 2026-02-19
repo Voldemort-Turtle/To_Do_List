@@ -84,7 +84,7 @@ if __name__ == '__main__':
     todolist = ToDoList()
     print("Use only words:"+""+"ADD, LIST, REMOVE, EXIT")
     first_information = ""
-    while True:
+    while (first_information != "EXIT"):
         try:
             print('>', end='')
             input_string = input()
@@ -101,6 +101,8 @@ if __name__ == '__main__':
                 todolist.remove_from_list(command["index"])
             if (command["name"] == "DONE"):
                 todolist.done(command["index"])
+            if (command["name"] == "EXIT"):
+                break
         except ToDoListError as e:
             print("Błąd:", e)
         except ValueError:
