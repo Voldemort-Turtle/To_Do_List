@@ -24,4 +24,17 @@ Each task contains:
  - Task description.
  - Completion status.
 
-
+# Examples:
+'''
+>ADD LISTA
+>LIST
+0:[ ]LISTA
+>DONE 0
+>ADD TWO
+>LIST
+0:[X]LISTA
+1:[ ]TWO
+>REMOVE 0
+>LIST
+1:[ ]TWO
+'''
