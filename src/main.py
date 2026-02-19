@@ -58,10 +58,12 @@ class ToDoList:
 # { "name": "REMOVE", "index": <parsed-index>" }
 # etc.
 def parse_command(input_string):#ADD XD
-    two_information = input_string.split(" ")
-    name = two_information[0]
+    two_information = input_string.split(" ",1)
+    name = two_information[0].upper()
 
     if(name == "ADD"):
+        if len(two_information) < 2:
+            raise ToDoListError("ADD requires a description")
         argument = two_information[1]
         return {"name" : name, "description" : argument}
     elif (name == "REMOVE"):
@@ -82,19 +84,25 @@ if __name__ == '__main__':
     todolist = ToDoList()
     print("Use only words:"+""+"ADD, LIST, REMOVE, EXIT")
     first_information = ""
-    while (first_information != "EXIT"):
-        print('>', end='')
-        input_string = input()
-        command = parse_command(input_string)
+    while True:
+        try:
+            print('>', end='')
+            input_string = input()
+            command = parse_command(input_string)
 
-        if(command["name"] == "ADD"):
-            todolist.dodaj(command["description"])
-        if(command["name"] == "LIST"):
-            lista = todolist.list_of_things()
-            for l in lista:
-                print(l)
+            if (command["name"] == "ADD"):
+                todolist.dodaj(command["description"])
+            if (command["name"] == "LIST"):
+                lista = todolist.list_of_things()
+                for l in lista:
+                    print(l)
 
-        if( command["name"]== "REMOVE"):
-            todolist.remove_from_list(command["index"])
-        if(command["name"] == "DONE"):
-            todolist.done(command["index"])
+            if (command["name"] == "REMOVE"):
+                todolist.remove_from_list(command["index"])
+            if (command["name"] == "DONE"):
+                todolist.done(command["index"])
+        except ToDoListError as e:
+            print("Błąd:", e)
+        except ValueError:
+            print("Błąd: id musi być liczbą")
+
