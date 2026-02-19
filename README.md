@@ -51,12 +51,15 @@ Each task contains:
 '''
 
 #How to run:
+
 Check your Python version:
 - python --version
 
 Clone the repository
 - git clone https://github.com/TWOJ_LOGIN/TWOJE_REPO.git
+  
  Navigate to the project folder
 - cd YOUR_REPOSITORY
+  
  Run the application
 - python main.py
