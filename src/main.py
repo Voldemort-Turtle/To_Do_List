@@ -53,31 +53,34 @@ class ToDoList:
             list_of_strings.append(represent)
         return list_of_strings
 
-    def remove_from_list(self, index):
+    def remove_from_list(self, index: str) -> None:
         indexing = int(index)
         if indexing not in self.list_of_to_dos:
             raise ToDoListError('Cannot remove todo: no todo with index=0')
         del self.list_of_to_dos[indexing]
 
-    def done(self, index):
+    def done(self, index: str) -> None:
         indexing = int(index)
         if indexing not in self.list_of_to_dos:
             raise ToDoListError(f'Cannot mark done todo: no todo with index= {index}')
         self.list_of_to_dos[indexing]['done'] = True
 
     # serializacja
-    def save_to_file(self, filename):
+    def save_to_file(self, filename: str) -> None:
         with open(filename, 'w', encoding="utf-8") as f:
             json.dump({"i": self.i, "tasks": self.list_of_to_dos}, f, ensure_ascii=False, indent=2)
 
     # deserializacja
-    def load_from_file(self, filename):
+    def load_from_file(self, filename: str) -> None:
         try:
             with open(filename, 'r', encoding="utf-8") as f:
                 data = json.load(f)
                 self.i = data.get("i", 0)
-                self.list_of_to_dos = {int(k): v for k, v in data.get("tasks", {}).items()}
+                self.list_of_to_dos = {}
+                for k, v in data.get("tasks", {}).items():
+                    self.list_of_to_dos[int(k)] =  v
         except (FileNotFoundError, json.JSONDecodeError):
+            print("File not found, starting from scratch...")
             self.list_of_to_dos = {}
             self.i = 0
 
