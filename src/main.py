@@ -1,3 +1,7 @@
+import sys
+import argparse
+from typing import List
+import json
 
 # Create todo list app that supports 4 commands:
 # - ADD <task_description>
@@ -33,7 +37,7 @@ class ToDoList:
         self.i += 1
 
 
-    def list_of_things(self):
+    def list_of_things(self) -> List[str]:
         list_of_strings = []
         for message in self.list_of_to_dos.values():
             # 1: [X?] <description>
@@ -56,6 +60,48 @@ class ToDoList:
         if indexing not in self.list_of_to_dos:
             raise ToDoListError(f'Cannot mark done todo: no todo with index= {index}')
         self.list_of_to_dos[indexing]['done'] = True
+    #serializacja
+    def save_to_file(self, filename):
+        with open(filename, 'w', encoding="utf-8") as f:
+            json.dump({"i": self.i, "tasks": self.list_of_to_dos}, f, ensure_ascii=False, indent=2)
+    #deserializacja
+    def load_from_file(self, filename):
+        try:
+            self.list_of_to_dos, self.i  = odczytaj_z_pliku(filename)
+
+        except (FileNotFoundError):
+            self.list_of_to_dos = {}
+            self.i = 0
+
+
+        '''    
+        def load_from_file(self, filename):
+        try:
+            with open(filename, 'r', encoding="utf-8") as f:
+                data = json.load(f)
+                print("tutaj data")
+                print(data)
+                self.i = data.get("i", 0)
+                self.list_of_to_dos = {int(k): v for k, v in data.get("tasks", {}).items()}
+        except (FileNotFoundError, json.JSONDecodeError):
+            self.list_of_to_dos = {}
+            self.i = 0
+            
+        '''
+        #print("tutaj data po try")
+        '''
+        {
+            'i': 3,
+            'tasks': {
+                '0': {'description': 'JEDEN', 'done': True, 'index': 0},
+                '1': {'description': 'DWA', 'done': False, 'index': 1},
+                '2': {'description': 'TRZY', 'done': False, 'index': 2}
+            }
+        }
+        '''
+        #print(data)
+
+
 
 # Returns:
 # { "name": "ADD", "description": "<parsed-description>" }
@@ -83,10 +129,63 @@ def parse_command(input_string):#ADD XD
     else:
         raise ToDoListError('Unknown command {}'.format(input_string))
 
+def clear_file(filename):
+    with open(filename, "w", encoding="utf-8") as file:
+        pass
+def odczytaj_z_pliku(filename):
+    list_of_to_dos = {}
+    message = ""
+    i=0
+    with open(filename,'r') as file:
+        linia = file.read()
+        for element in linia.split("\n"):
+            if element == "":
+                break
+            task = {"description": message, "done": False, "index": i}
+            liczba_wartosc = element.split(":")
+            czy_done_message = element.split("]")
+            if czy_done_message[0][3] == "x" or czy_done_message[0][3] == "X":
+                task["done"] = True
+            else:
+                task["done"] = False
+            task["description"] = czy_done_message[1][1:len(czy_done_message[1])]
+            task["index"] = int(liczba_wartosc[0])
+            list_of_to_dos[i] = task
+            i = i + 1
+        return list_of_to_dos,i
+
+
+
+
 
 if __name__ == '__main__':
+    print("odczyt z pliku")
+    list_of_to_dos , i = odczytaj_z_pliku('test.txt')
+    print(i)
+    print(list_of_to_dos)
+    print("jestem w funkcji odczytaj z pliku")
+    filename = sys.argv[1]
+    print("Loaded database file:" , filename)
+
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("file")
+    parser.add_argument("--clear", action="store_true")
+    args = parser.parse_args()
+    filename = args.file
+    if args.clear:
+        open(filename, "w", encoding="utf-8").close()
+    else:
+        print("Database contents:")
+        todolist = ToDoList()
+        todolist.load_from_file(filename)
+
+        for item in todolist.list_of_things():
+            print(item)
+
     todolist = ToDoList()
-    print("Use only words:"+""+"ADD, LIST, REMOVE, EXIT")
+    todolist.load_from_file(filename)
+    print("Use only words:" + "" + "ADD, LIST, REMOVE, EXIT, DONE")
     first_information = ""
     while (first_information != "EXIT"):
         try:
@@ -106,6 +205,8 @@ if __name__ == '__main__':
             if (command["name"] == "DONE"):
                 todolist.done(command["index"])
             if (command["name"] == "EXIT"):
+                todolist.save_to_file(filename)
+                print("Dane zapisane do pliku.")
                 break
         except ToDoListError as e:
             print("Błąd:", e)
