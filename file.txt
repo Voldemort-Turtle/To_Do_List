@@ -1,0 +1,25 @@
+{
+  "i": 4,
+  "tasks": {
+    "0": {
+      "description": "JEDEN",
+      "done": true,
+      "index": 0
+    },
+    "1": {
+      "description": "DWA",
+      "done": false,
+      "index": 1
+    },
+    "2": {
+      "description": "TRZY",
+      "done": true,
+      "index": 2
+    },
+    "3": {
+      "description": "trzy",
+      "done": false,
+      "index": 3
+    }
+  }
+}
